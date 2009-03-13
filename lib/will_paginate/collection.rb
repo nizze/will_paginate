@@ -18,7 +18,11 @@ module WillPaginate
   # check for those cases and manually deal with them as you see fit.
   class InvalidPage < ArgumentError
     def initialize(page, page_num)
-      super "#{page.inspect} given as value, which translates to '#{page_num}' as page number"
+      if page_num.zero?
+        super "#{page.inspect} given as value. Page numbers start from number one"
+      else
+        super "#{page.inspect} given as value, which translates to '#{page_num}' as page number."
+      end
     end
   end
   
