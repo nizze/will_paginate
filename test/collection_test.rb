@@ -119,6 +119,31 @@ class ArrayPaginationTest < Test::Unit::TestCase
     end
   end
 
+  # Since most programmers think
+  # that collections start at 0
+  # a friendly error message should
+  # be given when programmer gives
+  # 0 as the page number
+  def test_invalid_page_number_zero
+    assert_raise(WillPaginate::InvalidPage) { create 0 }
+
+    errors = {}
+
+    begin
+      create 0
+    rescue WillPaginate::InvalidPage => e
+      errors[:zero_page] = e   
+    end
+
+    begin
+      create 'Pretzel'
+    rescue WillPaginate::InvalidPage => e
+      errors[:invalid_page] = e   
+    end
+
+    assert_not_equal errors[:zero_page].message, errors[:invalid_page].message
+  end
+
   def test_invalid_per_page_setting
     assert_raise(ArgumentError) { create(1, -1) }
   end
